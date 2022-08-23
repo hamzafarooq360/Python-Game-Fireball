@@ -1,568 +1,450 @@
 import pygame
 import math
 
-# initialising the game
-pygame.init()
-
-
-# Create the screen
-screen = pygame.display.set_mode((800, 600))
-
-
-#bg
-background = pygame.image.load('bg.png')
-
-# Title and icon
-pygame.display.set_caption("Fireball")
-icon = pygame.image.load('maze.png')
-pygame.display.set_icon(icon)
-
-
-
-# Player
-player_image = pygame.image.load('player.png')
-playerX = 360
-playerY = 10
-playerX_change = 0
-playerY_change = 0
-
-#Bombs
-Bomb1_image = pygame.image.load('Bomb.png')
-Bomb2_image = pygame.image.load('Bomb.png')
-Bomb3_image = pygame.image.load('Bomb.png')
-Bomb4_image = pygame.image.load('Bomb.png')
-
-Bomb1X = 70
-Bomb1Y = 100
-
-Bomb2X = 200
-Bomb2Y = 400
-
-Bomb3X = 400
-Bomb3Y = 200
-
-Bomb4X = 600
-Bomb4Y = 300
-
-# fires
-fire_images = []
-fireX = []
-fireY = []
-fireX_change = []
-fireY_change = []
-
-# Fire1
-fire1_image = pygame.image.load('fire.png')
-fire1X = 70
-fire1Y = 100
-fire1X_change = 3
-fire1Y_change = 3
-fireX.append(fire1X)
-fireY.append(fire1Y)
-fireX_change.append(fire1X_change)
-fireY_change.append(fire1Y_change)
-
-# Fire2
-fire2_image = pygame.image.load('fire2.png')
-fire2X = 200
-fire2Y = 400
-fire2X_change = -3
-fire2Y_change = 3
-fireX.append(fire2X)
-fireY.append(fire2Y)
-fireX_change.append(fire2X_change)
-fireY_change.append(fire2Y_change)
-
-# Fire3
-fire3_image = pygame.image.load('fire2.png')
-fire3X = 400
-fire3Y = 200
-fire3X_change = -3
-fire3Y_change = -3
-fireX.append(fire3X)
-fireY.append(fire3Y)
-fireX_change.append(fire3X_change)
-fireY_change.append(fire3Y_change)
-
-# Fire4
-fire4_image = pygame.image.load('fire2.png')
-fire4X = 600
-fire4Y = 300
-fire4X_change = -3
-fire4Y_change = 3
-fireX.append(fire4X)
-fireY.append(fire4Y)
-fireX_change.append(fire4X_change)
-fireY_change.append(fire4Y_change)
-
-# Fire5
-fire5_image = pygame.image.load('fire2.png')
-fire5X = 600
-fire5Y = 300
-fire5X_change = -3
-fire5Y_change = 3
-fireX.append(fire5X)
-fireY.append(fire5Y)
-fireX_change.append(fire5X_change)
-fireY_change.append(fire5Y_change)
-
-
-# Fire6
-fire6_image = pygame.image.load('fire2.png')
-fire6X = 400
-fire6Y = 200
-fire6X_change = -3
-fire6Y_change = -3
-fireX.append(fire6X)
-fireY.append(fire6Y)
-fireX_change.append(fire6X_change)
-fireY_change.append(fire6Y_change)
-
-# Fire7
-fire7_image = pygame.image.load('fire2.png')
-fire7X = 200
-fire7Y = 400
-fire7X_change = -3
-fire7Y_change = 3
-fireX.append(fire7X)
-fireY.append(fire7Y)
-fireX_change.append(fire7X_change)
-fireY_change.append(fire7Y_change)
-
-# Fire8
-fire8_image = pygame.image.load('fire2.png')
-fire8X = 70
-fire8Y = 100
-fire8X_change = 3
-fire8Y_change = 3
-fireX.append(fire8X)
-fireY.append(fire8Y)
-fireX_change.append(fire8X_change)
-fireY_change.append(fire8Y_change)
-
-# Fire9
-fire9_image = pygame.image.load('fire2.png')
-fire9X = 70
-fire9Y = 100
-fire9X_change = 3
-fire9Y_change = 3
-fireX.append(fire9X)
-fireY.append(fire9Y)
-fireX_change.append(fire9X_change)
-fireY_change.append(fire9Y_change)
-
-# Fire10
-fire10_image = pygame.image.load('fire2.png')
-fire10X = 200
-fire10Y = 400
-fire10X_change = -3
-fire10Y_change = 3
-fireX.append(fire10X)
-fireY.append(fire10Y)
-fireX_change.append(fire10X_change)
-fireY_change.append(fire10Y_change)
-
-# Fire11
-fire11_image = pygame.image.load('fire2.png')
-fire11X = 400
-fire11Y = 200
-fire11X_change = -3
-fire11Y_change = -3
-fireX.append(fire11X)
-fireY.append(fire11Y)
-fireX_change.append(fire11X_change)
-fireY_change.append(fire11Y_change)
-
-# Fire12
-fire12_image = pygame.image.load('fire2.png')
-fire12X = 600
-fire12Y = 300
-fire12X_change = -3
-fire12Y_change = 3
-fireX.append(fire12X)
-fireY.append(fire12Y)
-fireX_change.append(fire12X_change)
-fireY_change.append(fire12Y_change)
-
-
-font = pygame.font.Font('freesansbold.ttf',32)
-
-seconds = 0
+def game():
 
-textX = 10
-textY = 10
-
-# Game over
-Gameover_font = pygame.font.Font('freesansbold.ttf', 30)
-
-
-def show_time(x, y):
-    time = font.render("Time :" + str(seconds), True, (255, 255, 255))
-    screen.blit(time, (x, y))
-
-
-def win():
-    winning = font.render("YOU WON!!", True, (255, 255, 255))
-    screen.fill('Black')
-    screen.blit(winning, (250, 250))
-
-def game_over():
-    over = Gameover_font.render("GAME OVER! YOU SURVIVED " + str(final_times[0]) + " SECONDS", True, (255, 255, 255))
-    screen.blit(over, (50, 250))
-
-def player(x, y):
-    screen.blit(player_image, (x, y))
-
-def bomb1(x,y):
-    screen.blit(Bomb1_image, (x, y))
-
-def bomb2(x,y):
-    screen.blit(Bomb2_image, (x, y))
-
-def bomb3(x,y):
-    screen.blit(Bomb3_image, (x, y))
-
-def bomb4(x,y):
-    screen.blit(Bomb4_image, (x, y))
-
-def fire1(x, y):
-    screen.blit(fire1_image, (x, y))
-
-def fire2(x, y):
-    screen.blit(fire2_image, (x, y))
-
-def fire3(x, y):
-    screen.blit(fire3_image, (x, y))
-
-def fire4(x, y):
-    screen.blit(fire4_image, (x, y))
-
-def fire5(x, y):
-    screen.blit(fire5_image, (x, y))
-
-def fire6(x, y):
-    screen.blit(fire6_image, (x, y))
-
-def fire7(x, y):
-    screen.blit(fire7_image, (x, y))
-
-def fire8(x, y):
-    screen.blit(fire8_image, (x, y))
-
-def fire9(x, y):
-    screen.blit(fire9_image, (x, y))
-
-def fire10(x, y):
-    screen.blit(fire10_image, (x, y))
-
-def fire11(x, y):
-    screen.blit(fire11_image, (x, y))
-
-def fire12(x, y):
-    screen.blit(fire12_image, (x, y))
-
-def isCollision(enemyX, enemyY, playerX, playerY):
-    distance = math.sqrt(math.pow(enemyX-playerX,2)+math.pow(enemyY-playerY,2))
-    return distance < 32
-
-
-#starter tick
-start_ticks = pygame.time.get_ticks()
-
-
-# Game loop
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    # Colour
-    screen.fill((0, 0, 0))
-    screen.blit(background, (0, 0))
-
-
-    seconds = (pygame.time.get_ticks() - start_ticks) / 1000  # calculate how many seconds
-
-
-
-
-    if fire1X <= 0:
-        fire1X_change = 3
-        fire1Y_change = 3
-    elif fire1X >= 750:
-        fire1X_change = -3
-        fire1Y_change = 0
-    if fire1Y <= 0:
-        fire1X_change = 0
-        fire1Y_change = 2
-    elif fire1Y >= 550:
-        fire1X_change = 3
-        fire1Y_change = -3
-
-    if fire2X <= 0:
-        fire2X_change = 3
-        fire2Y_change = 3
-    elif fire2X >= 750:
-        fire2X_change = -3
-        fire2Y_change = 3
-    if fire2Y <= 0:
-        fire2X_change = -3
-        fire2Y_change = 3
-    elif fire2Y >= 550:
-        fire2X_change = 0
-        fire2Y_change = -3
-
-    if fire3X <= 0:
-        fire3X_change = 5
-        fire3Y_change = 3
-    elif fire3X >= 750:
-        fire3X_change = -3
-        fire3Y_change = 3
-    if fire3Y <= 0:
-        fire3X_change = -3
-        fire3Y_change = 3
-    elif fire3Y >= 550:
-        fire3X_change = 0
-        fire3Y_change = -3
-
-    if fire4X <= 0:
-        fire4X_change = 3
-        fire4Y_change = 3
-    elif fire4X >= 750:
-        fire4X_change = -3
-        fire4Y_change = 3
-    if fire4Y <= 0:
-        fire4X_change = -3
-        fire4Y_change = 3
-    elif fire4Y >= 550:
-        fire4X_change = 0
-        fire4Y_change = -3
-
-        # break
-    if fire8X <= 0:
-        fire8X_change = 3
-        fire8Y_change = 3
-    elif fire8X >= 750:
-        fire8X_change = -3
-        fire8Y_change = 0
-    if fire8Y <= 0:
-        fire8X_change = 0
-        fire8Y_change = 2
-    elif fire8Y >= 550:
-        fire8X_change = 3
-        fire8Y_change = -3
-
-    if fire7X <= 0:
-        fire7X_change = 3
-        fire7Y_change = 3
-    elif fire7X >= 750:
-        fire7X_change = -3
-        fire7Y_change = 3
-    if fire7Y <= 0:
-        fire7X_change = -3
-        fire7Y_change = 3
-    elif fire7Y >= 550:
-        fire7X_change = 0
-        fire7Y_change = -3
-
-    if fire6X <= 0:
-        fire6X_change = 5
-        fire6Y_change = 3
-    elif fire6X >= 750:
-        fire6X_change = -3
-        fire6Y_change = 3
-    if fire6Y <= 0:
-        fire6X_change = -3
-        fire6Y_change = 3
-    elif fire6Y >= 550:
-        fire6X_change = 0
-        fire6Y_change = -3
-
-    if fire5X <= 0:
-        fire5X_change = 3
-        fire5Y_change = 3
-    elif fire5X >= 750:
-        fire5X_change = -3
-        fire5Y_change = 3
-    if fire5Y <= 0:
-        fire5X_change = -3
-        fire5Y_change = 3
-    elif fire5Y >= 550:
-        fire5X_change = 0
-        fire5Y_change = -3
-        # break
-
-    if fire9X <= 0:
-        fire9X_change = 3
-        fire9Y_change = 3
-    elif fire9X >= 750:
-        fire9X_change = -3
-        fire9Y_change = 0
-    if fire9Y <= 0:
-        fire9X_change = 0
-        fire9Y_change = 2
-    elif fire9Y >= 550:
-        fire9X_change = 3
-        fire9Y_change = -3
-
-    if fire10X <= 0:
-        fire10X_change = 3
-        fire10Y_change = 3
-    elif fire10X >= 750:
-        fire10X_change = -3
-        fire10Y_change = 3
-    if fire10Y <= 0:
-        fire10X_change = -3
-        fire10Y_change = 3
-    elif fire10Y >= 550:
-        fire10X_change = 0
-        fire10Y_change = -3
-
-    if fire11X <= 0:
-        fire11X_change = 5
-        fire11Y_change = 3
-    elif fire11X >= 750:
-        fire11X_change = -3
-        fire11Y_change = 3
-    if fire11Y <= 0:
-        fire11X_change = -3
-        fire11Y_change = 3
-    elif fire11Y >= 550:
-        fire11X_change = 0
-        fire11Y_change = -3
-
-    if fire12X <= 0:
-        fire12X_change = 3
-        fire12Y_change = 3
-    elif fire12X >= 750:
-        fire12X_change = -3
-        fire12Y_change = 3
-    if fire12Y <= 0:
-        fire12X_change = -3
-        fire12Y_change = 3
-    elif fire12Y >= 550:
-        fire12X_change = 0
-        fire12Y_change = -3
-
-    # keystrokes and boundaries(player)
-    if event.type == pygame.KEYDOWN:
-        if playerX <= 0:
-            playerX = 0
-        elif playerX >= 726:
-            playerX = 726
-        elif playerY <= 0:
-            playerY = 0
-        elif playerY >= 550:
-            playerY = 550
-        if event.key == pygame.K_LEFT:
-            playerX_change = -3.0
-        if event.key == pygame.K_RIGHT:
-            playerX_change = 3.0
-        if event.key == pygame.K_UP:
-            playerY_change = -3.0
-        if event.key == pygame.K_DOWN:
-            playerY_change = 3.0
-
-    if event.type == pygame.KEYUP:
-        if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-            playerX_change = 0
-        if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-            playerY_change = 0
-
-    
-
-    playerX += playerX_change
-    playerY += playerY_change
-    fire1X += fire1X_change
-    fire1Y += fire1Y_change
-    fire2X += fire2X_change
-    fire2Y += fire2Y_change
-    fire3X += fire3X_change
-    fire3Y += fire3Y_change
-    fire4X += fire4X_change
-    fire4Y += fire4Y_change
-
-
-
-    player(playerX, playerY)
-    bomb1(Bomb1X,Bomb1Y)
-    bomb2(Bomb2X, Bomb2Y)
-    bomb3(Bomb3X, Bomb3Y)
-    bomb4(Bomb4X, Bomb4Y)
-
-    fire1(fire1X, fire1Y)
-    fire2(fire2X, fire2Y)
-    fire3(fire3X, fire3Y)
-    fire4(fire4X, fire4Y)
-
-
-    if seconds > 10:
-        fire5(fire5X, fire5Y)
-        fire5X += fire5X_change
-        fire5Y += fire5Y_change
-    if seconds > 20:
-        fire6(fire6X, fire6Y)
-        fire6X += fire6X_change
-        fire6Y += fire6Y_change
-    if seconds > 30:
-        fire7(fire7X, fire7Y)
-        fire7X += fire7X_change
-        fire7Y += fire7Y_change
-    if seconds > 40:
-        fire8(fire8X, fire8Y)
-        fire8X += fire8X_change
-        fire8Y += fire8Y_change
-    if seconds > 50:
-        fire9(fire9X, fire9Y)
-        fire9X += fire9X_change
-        fire9Y += fire9Y_change
-    if seconds > 60:
-        fire10(fire10X, fire10Y)
-        fire10X += fire10X_change
-        fire10Y += fire10Y_change
-
-    if seconds > 70:
-        fire11(fire11X, fire11Y)
-        fire11X += fire11X_change
-        fire11Y += fire11Y_change
-
-    if seconds > 80:
-        fire12(fire12X, fire12Y)
-        fire12X += fire12X_change
-        fire12Y += fire12Y_change
-
-    if seconds > 90:
-        win()
-
-    collisions = []
-    collisions.append(isCollision(fire1X, fire1Y, playerX, playerY))
-    collisions.append(isCollision(fire2X, fire2Y, playerX, playerY))
-    collisions.append(isCollision(fire3X, fire3Y, playerX, playerY))
-    collisions.append(isCollision(fire4X, fire4Y, playerX, playerY))
-    collisions.append(isCollision(fire5X, fire5Y, playerX, playerY))
-    collisions.append(isCollision(fire6X, fire6Y, playerX, playerY))
-    collisions.append(isCollision(fire7X, fire7Y, playerX, playerY))
-    collisions.append(isCollision(fire8X, fire8Y, playerX, playerY))
-    collisions.append(isCollision(fire9X, fire9Y, playerX, playerY))
-    collisions.append(isCollision(fire10X, fire10Y, playerX, playerY))
-    collisions.append(isCollision(fire11X, fire11Y, playerX, playerY))
-    collisions.append(isCollision(fire12X, fire12Y, playerX, playerY))
-
-    for i in range(len(collisions)):
-        if collisions[i]:
-            end_time = pygame.time.get_ticks()
-            playerX = 200
-            playerY = 400
-            playerX_change = 0
-            playerY_change = 0
-            screen.fill('Black')
-            seconds_survived = (end_time - start_ticks) // 1000
-            final_times = []
-            final_times.append(seconds_survived)
-            over = Gameover_font.render("GAME OVER! YOU SURVIVED " + str(final_times[0]) + " SECONDS", True,
-                                        (255, 255, 255))
-            screen.blit(over, (50, 250))
-
-    show_time(textX, textY)
-    pygame.display.update()
+    end_time = pygame.time.get_ticks() / 1000
+
+    # initialising the game
+    pygame.init()
+
+    # Create the screen
+    screen = pygame.display.set_mode((800, 600))
+
+    #bg
+    background = pygame.image.load('bg.png')
+
+    # Title and icon
+    pygame.display.set_caption("Fireball")
+    icon = pygame.image.load('maze.png')
+    pygame.display.set_icon(icon)
+
+    # Player
+    player_image = pygame.image.load('player.png')
+    class player:
+
+        def __init__(self, playerX, playerY, playerX_change, playerY_change):
+            self.playerX = playerX
+            self.playerY = playerY
+            self.playerX_change = playerX_change
+            self.playerY_change = playerY_change
+
+    p = player(360, 10, 0, 0)
+
+    #Bombs
+    Bomb_image = pygame.image.load('Bomb.png')
+
+
+    class Bomb:
+        def __init__(self, BombX, BombY):
+            self.BombX = BombX
+            self.BombY = BombY
+
+    Bomb1 = Bomb(70, 100)
+    Bomb2 = Bomb(200, 400)
+    Bomb3 = Bomb(400, 200)
+    Bomb4 = Bomb(600, 300)
+
+
+    # Fires
+    fire1_image = pygame.image.load('fire.png')
+
+    class Fire:
+        def __init__(self, FireX, FireY, FireX_change, FireY_Change):
+            self.FireX = FireX
+            self.FireY = FireY
+            self.FireX_change = FireX_change
+            self.FireY_change = FireY_Change
+
+
+    # Fire1
+    Fire1 = Fire(70, 100, 3, 3)
+
+    # Fire2
+    Fire2 = Fire(200, 400, -3, 3)
+
+    # Fire3
+    Fire3 = Fire(400, 200, -3, -3)
+
+    # Fire4
+    Fire4 = Fire(600, 300, -3, 3)
+
+    # Fire5
+    Fire5 = Fire(600, 300, -3, 3)
+
+    # Fire6
+    Fire6 = Fire(400, 200, -3, -3)
+
+
+    # Fire7
+    Fire7 = Fire(200, 400, -3, 3)
+
+    # Fire8
+    Fire8 = Fire(70, 100, 3, 3)
+
+    # Fire9
+    Fire9 = Fire(70, 100, 3, 3)
+
+    # Fire10
+    Fire10 = Fire(200, 400, -3, 3)
+
+    # Fire11
+    Fire11 = Fire(400, 200, -3, -3)
+
+    # Fire12
+    Fire12 = Fire(600, 300, -3, 3)
+
+    font = pygame.font.Font('freesansbold.ttf',32)
+
+
+    textX = 10
+    textY = 10
+
+    # Game over
+    Gameover_font = pygame.font.Font('freesansbold.ttf', 30)
+    survival_font = pygame.font.Font('freesansbold.ttf', 30)
+
+
+    def show_time(x, y):
+        time = font.render("Time:" + str(int(start_time-end_time)) + " Seconds", True, (255, 255, 255))
+        screen.blit(time, (x, y))
+
+
+    def win():
+        screen.fill('Black')
+        winning = font.render("YOU WON!! Press P to play again or Q to quit", True, (255, 255, 255))
+        screen.blit(winning, (50, 250))
+
+        p.playerX = 360
+        p.playerY = 10
+        p.playerX_change = 0
+        p.playerY_change = 0
+
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        return
+                    elif event.key == pygame.K_p:
+                        gameover = False
+                        start_time = 0
+                        game()
+
+    def playerr(x, y):
+        screen.blit(player_image, (x, y))
+
+    def bomb(x,y):
+        screen.blit(Bomb_image, (x, y))
+
+    def fire(x, y):
+        screen.blit(fire1_image, (x, y))
+
+
+    def isCollision(enemyX, enemyY, playerX, playerY):
+        distance = math.sqrt(math.pow(enemyX-playerX,2)+math.pow(enemyY-playerY,2))
+        return distance < 32
+
+
+    # Game loop
+    running = True
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        start_time = pygame.time.get_ticks() / 1000
+
+        # Colour
+        screen.fill((0, 0, 0))
+        screen.blit(background, (0, 0))
+
+
+        if Fire1.FireX <= 0:
+            Fire1.FireX_change = 3
+            Fire1.FireY_change = 3
+        elif Fire1.FireX >= 750:
+            Fire1.FireX_change = -3
+            Fire1.FireY_change = 0
+        if Fire1.FireY <= 0:
+            Fire1.FireX_change = 0
+            Fire1.FireY_change = 2
+        elif Fire1.FireY >= 550:
+            Fire1.FireX_change = 3
+            Fire1.FireY_change = -3
+
+        if Fire2.FireX <= 0:
+            Fire2.FireX_change = 3
+            Fire2.FireY_change = 3
+        elif Fire2.FireX >= 750:
+            Fire2.FireX_change = -3
+            Fire2.FireY_change = 3
+        if Fire2.FireY <= 0:
+            Fire2.FireX_change = -3
+            Fire2.FireY_change = 3
+        elif Fire2.FireY >= 550:
+            Fire2.FireX_change = 0
+            Fire2.FireY_change = -3
+
+        if Fire3.FireX <= 0:
+            Fire3.FireX_change = 5
+            Fire3.FireY_change = 3
+        elif Fire3.FireX >= 750:
+            Fire3.FireX_change = -3
+            Fire3.FireY_change = 3
+        if Fire3.FireY <= 0:
+            Fire3.FireX_change = -3
+            Fire3.FireY_change = 3
+        elif Fire3.FireY >= 550:
+            Fire3.FireX_change = 0
+            Fire3.FireY_change = -3
+
+        if Fire4.FireX <= 0:
+            Fire4.FireX_change = 3
+            Fire4.FireY_change = 3
+        elif Fire4.FireX >= 750:
+            Fire4.FireX_change = -3
+            Fire4.FireY_change = 3
+        if Fire4.FireY <= 0:
+            Fire4.FireX_change = -3
+            Fire4.FireY_change = 3
+        elif Fire4.FireY >= 550:
+            Fire4.FireX_change = 0
+            Fire4.FireY_change = -3
+
+            # break
+        if Fire8.FireX <= 0:
+            Fire8.FireX_change = 3
+            Fire8.FireY_change = 3
+        elif Fire8.FireX >= 750:
+            Fire8.FireX_change = -3
+            Fire8.FireY_change = 0
+        if Fire8.FireY <= 0:
+            Fire8.FireX_change = 0
+            Fire8.FireY_change = 2
+        elif Fire8.FireY >= 550:
+            Fire8.FireX_change = 3
+            Fire8.FireY_change = -3
+
+        if Fire7.FireX <= 0:
+            Fire7.FireX_change = 3
+            Fire7.FireY_change = 3
+        elif Fire7.FireX >= 750:
+            Fire7.FireX_change = -3
+            Fire7.FireY_change = 3
+        if Fire7.FireY <= 0:
+            Fire7.FireX_change = -3
+            Fire7.FireY_change = 3
+        elif Fire7.FireY >= 550:
+            Fire7.FireX_change = 0
+            Fire7.FireY_change = -3
+
+        if Fire6.FireX <= 0:
+            Fire6.FireX_change = 5
+            Fire6.FireY_change = 3
+        elif Fire6.FireX >= 750:
+            Fire6.FireX_change = -3
+            Fire6.FireY_change = 3
+        if Fire6.FireY <= 0:
+            Fire6.FireX_change = -3
+            Fire6.FireY_change = 3
+        elif Fire6.FireY >= 550:
+            Fire6.FireX_change = 0
+            Fire6.FireY_change = -3
+
+        if Fire5.FireX <= 0:
+            Fire5.FireX_change = 3
+            Fire5.FireY_change = 3
+        elif Fire5.FireX >= 750:
+            Fire5.FireX_change = -3
+            Fire5.FireY_change = 3
+        if Fire5.FireY <= 0:
+            Fire5.FireX_change = -3
+            Fire5.FireY_change = 3
+        elif Fire5.FireY >= 550:
+            Fire5.FireX_change = 0
+            Fire5.FireY_change = -3
+
+        if Fire9.FireX <= 0:
+            Fire9.FireX_change = 3
+            Fire9.FireY_change = 3
+        elif Fire9.FireX >= 750:
+            Fire9.FireX_change = -3
+            Fire9.FireY_change = 0
+        if Fire9.FireY <= 0:
+            Fire9.FireX_change = 0
+            Fire9.FireY_change = 2
+        elif Fire9.FireY >= 550:
+            Fire9.FireX_change = 3
+            Fire9.FireY_change = -3
+
+        if Fire10.FireX <= 0:
+            Fire10.FireX_change = 3
+            Fire10.FireY_change = 3
+        elif Fire10.FireX >= 750:
+            Fire10.FireX_change = -3
+            Fire10.FireY_change = 3
+        if Fire10.FireY <= 0:
+            Fire10.FireX_change = -3
+            Fire10.FireY_change = 3
+        elif Fire10.FireY >= 550:
+            Fire10.FireX_change = 0
+            Fire2.FireY_change = -3
+
+        if Fire11.FireX <= 0:
+            Fire11.FireX_change = 5
+            Fire11.FireY_change = 3
+        elif Fire11.FireX >= 750:
+            Fire11.FireX_change = -3
+            Fire11.FireY_change = 3
+        if Fire11.FireY <= 0:
+            Fire11.FireX_change = -3
+            Fire11.FireY_change = 3
+        elif Fire11.FireY >= 550:
+            Fire11.FireX_change = 0
+            Fire11.FireY_change = -3
+
+        if Fire12.FireX <= 0:
+            Fire12.FireX_change = 3
+            Fire12.FireY_change = 3
+        elif Fire12.FireX >= 750:
+            Fire12.FireX_change = -3
+            Fire12.FireY_change = 3
+        if Fire12.FireY <= 0:
+            Fire12.FireX_change = -3
+            Fire12.FireY_change = 3
+        elif Fire12.FireY >= 550:
+            Fire12.FireX_change = 0
+            Fire12.FireY_change = -3
+
+        # keystrokes and boundaries(player)
+        if event.type == pygame.KEYDOWN:
+            if p.playerX <= 0:
+                p.playerX = 0
+            elif p.playerX >= 726:
+                p.playerX = 726
+            elif p.playerY <= 0:
+                p.playerY = 0
+            elif p.playerY >= 550:
+                p.playerY = 550
+            if event.key == pygame.K_LEFT:
+                p.playerX_change = -3.0
+            if event.key == pygame.K_RIGHT:
+                p.playerX_change = 3.0
+            if event.key == pygame.K_UP:
+                p.playerY_change = -3.0
+            if event.key == pygame.K_DOWN:
+                p.playerY_change = 3.0
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                p.playerX_change = 0
+            if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                p.playerY_change = 0
+
+
+        p.playerX += p.playerX_change
+        p.playerY += p.playerY_change
+        Fire1.FireX += Fire1.FireX_change
+        Fire1.FireY += Fire1.FireY_change
+        Fire2.FireX += Fire2.FireX_change
+        Fire2.FireY += Fire2.FireY_change
+        Fire3.FireX += Fire3.FireX_change
+        Fire3.FireY += Fire3.FireY_change
+        Fire4.FireX += Fire4.FireX_change
+        Fire4.FireY += Fire4.FireY_change
+
+        playerr(p.playerX, p.playerY)
+        bomb(Bomb1.BombX,Bomb1.BombY)
+        bomb(Bomb2.BombX,Bomb2.BombY)
+        bomb(Bomb3.BombX,Bomb3.BombY)
+        bomb(Bomb4.BombX,Bomb4.BombY)
+
+        fire(Fire1.FireX, Fire1.FireY)
+        fire(Fire2.FireX, Fire2.FireY)
+        fire(Fire3.FireX, Fire3.FireY)
+        fire(Fire4.FireX, Fire4.FireY)
+
+        if start_time - end_time > 10:
+            fire(Fire5.FireX, Fire5.FireY)
+            Fire5.FireX += Fire5.FireX_change
+            Fire5.FireY += Fire5.FireY_change
+
+        if start_time - end_time > 20:
+            fire(Fire6.FireX, Fire6.FireY)
+            Fire6.FireX += Fire6.FireX_change
+            Fire6.FireY += Fire6.FireY_change
+
+        if start_time - end_time > 30:
+            fire(Fire7.FireX, Fire7.FireY)
+            Fire7.FireX += Fire7.FireX_change
+            Fire7.FireY += Fire7.FireY_change
+
+        if start_time - end_time > 40:
+            fire(Fire8.FireX, Fire8.FireY)
+            Fire8.FireX += Fire8.FireX_change
+            Fire8.FireY += Fire8.FireY_change
+
+        if start_time - end_time > 50:
+            fire(Fire9.FireX, Fire9.FireY)
+            Fire9.FireX += Fire9.FireX_change
+            Fire9.FireY += Fire9.FireY_change
+
+        if start_time - end_time > 60:
+            fire(Fire10.FireX, Fire10.FireY)
+            Fire10.FireX += Fire10.FireX_change
+            Fire10.FireY += Fire10.FireY_change
+
+        if start_time - end_time > 70:
+            fire(Fire11.FireX, Fire11.FireY)
+            Fire11.FireX += Fire11.FireX_change
+            Fire11.FireY += Fire11.FireY_change
+
+        if start_time - end_time > 80:
+            fire(Fire12.FireX, Fire12.FireY)
+            Fire12.FireX += Fire12.FireX_change
+            Fire12.FireY += Fire12.FireY_change
+
+        if start_time - end_time > 90:
+            win()
+
+        collisions = []
+        collisions.append(isCollision(Fire1.FireX, Fire1.FireY, p.playerX, p.playerY))
+        collisions.append(isCollision(Fire2.FireX, Fire2.FireY, p.playerX,p.playerY))
+        collisions.append(isCollision(Fire3.FireX, Fire3.FireY, p.playerX, p.playerY))
+        collisions.append(isCollision(Fire4.FireX, Fire4.FireY, p.playerX, p.playerY))
+        collisions.append(isCollision(Fire5.FireX, Fire5.FireY, p.playerX, p.playerY))
+        collisions.append(isCollision(Fire6.FireX, Fire6.FireY, p.playerX, p.playerY))
+        collisions.append(isCollision(Fire7.FireX, Fire7.FireY, p.playerX, p.playerY))
+        collisions.append(isCollision(Fire8.FireX, Fire8.FireY, p.playerX, p.playerY))
+        collisions.append(isCollision(Fire9.FireX, Fire9.FireY, p.playerX, p.playerY))
+        collisions.append(isCollision(Fire10.FireX, Fire10.FireY, p.playerX, p.playerY))
+        collisions.append(isCollision(Fire11.FireX, Fire11.FireY, p.playerX, p.playerY))
+        collisions.append(isCollision(Fire12.FireX, Fire12.FireY, p.playerX, p.playerY))
+
+
+        for i in range(len(collisions)):
+            if collisions[i]:
+                gameover = True
+                screen.fill('Black')
+                over = Gameover_font.render("GAME OVER! Press P to Play Again and Q to Quit.", True,
+                                            (255, 255, 255))
+
+                screen.blit(over, (50, 250))
+                p.playerX = 200
+                p.playerY = 400
+                p.playerX_change = 0
+                p.playerY_change = 0
+
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        return
+                    elif event.key == pygame.K_p:
+                        gameover = False
+                        game()
+
+        show_time(20, 20)
+        pygame.display.update()
+
+game()
+
